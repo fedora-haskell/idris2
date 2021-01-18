@@ -1,6 +1,8 @@
 %global debug_package %{nil}
 
-%bcond_without test
+%bcond_with test
+
+%bcond_with racket
 
 Name:           idris2
 Version:        0.3.0
@@ -11,11 +13,16 @@ License:        BSD
 URL:            https://www.idris-lang.org/
 Source0:        https://www.idris-lang.org/idris2-src/%{name}-%{version}.tgz
 
-BuildRequires:  chez-scheme
 %if %{with test}
 BuildRequires:  clang
 %endif
+%if %{with racket}
+BuildRequires:  racket
+Requires:       racket
+%else
+BuildRequires:  chez-scheme
 Requires:       chez-scheme
+%endif
 
 %description
 Idris is a programming language designed to encourage Type-Driven Development.
@@ -27,20 +34,21 @@ Idris is a programming language designed to encourage Type-Driven Development.
 %build
 %global idris_prefix %{_libdir}/%{name}
 
-make bootstrap SCHEME=scheme PREFIX=%{buildroot}%{idris_prefix}
+make %{?with_racket:bootstrap-racket}%{!?with_racket:bootstrap SCHEME=scheme} PREFIX=%{buildroot}%{idris_prefix}
 
 
 %install
-export PATH=$PATH:%{buildroot}%{idris_prefix}/bin
+export PATH=%{buildroot}%{idris_prefix}/bin:$PATH
 make install PREFIX=%{buildroot}%{idris_prefix}
 
+%if %{without racket}
 sed -i -e "s!$PWD/build/exec!%{idris_prefix}/bin!" %{buildroot}%{idris_prefix}/bin/idris2_app/compileChez
-sed -i -e "s!%{buildroot}!!" %{buildroot}%{idris_prefix}/bin/idris2_app/idris2.ss
+chmod a-x %{buildroot}%{idris_prefix}/bin/idris2_app/compileChez
+%endif
+sed -i -e "s!%{buildroot}!!" %{buildroot}%{idris_prefix}/bin/idris2_app/%{!?with_racket:idris2.ss}%{?with_racket:idris2.rkt}
 
 sed -i -e '/^esac/a export IDRIS2_PREFIX=$(dirname $(dirname $DIR))' %{buildroot}%{idris_prefix}/bin/idris2
 
-#%{buildroot}%{idris_prefix}/%{name}-%{version}/{refc,support}
-chmod a-x %{buildroot}%{idris_prefix}/bin/idris2_app/compileChez
 chmod -R a=,+rwX %{buildroot}%{idris_prefix}/%{name}-%{version}
 
 mkdir -p %{buildroot}%{_bindir}
