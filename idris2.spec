@@ -5,7 +5,7 @@
 %bcond_with racket
 
 Name:           idris2
-Version:        0.3.0
+Version:        0.4.0
 Release:        1%{?dist}
 Summary:        Purely functional programming language with first class types
 
