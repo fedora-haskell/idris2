@@ -2,6 +2,7 @@
 
 %bcond_with test
 
+# causes /usr/lib/.build-id file conflict with racket-minimal
 %bcond_with racket
 
 Name:           idris2
