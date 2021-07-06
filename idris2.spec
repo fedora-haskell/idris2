@@ -47,12 +47,9 @@ export PATH=%{buildroot}%{idris_prefix}/bin:$PATH
 make install DESTDIR=%{buildroot} PREFIX=%{idris_prefix}
 
 %if %{without racket}
-sed -i -e "s!$PWD/build/exec!%{idris_prefix}/bin!" %{buildroot}%{idris_prefix}/bin/idris2_app/compileChez
 chmod a-x %{buildroot}%{idris_prefix}/bin/idris2_app/compileChez
 %endif
-sed -i -e "s!%{buildroot}!!" %{buildroot}%{idris_prefix}/bin/idris2_app/%{!?with_racket:idris2.ss}%{?with_racket:idris2.rkt}
-
-sed -i -e '/^esac/a export IDRIS2_PREFIX=$(dirname $(dirname $DIR))' %{buildroot}%{idris_prefix}/bin/idris2
+#sed -i -e "s!%{buildroot}!!" %{buildroot}%{idris_prefix}/bin/idris2_app/%{!?with_racket:idris2.ss}%{?with_racket:idris2.rkt}
 
 chmod -R a=,+rwX %{buildroot}%{idris_prefix}/%{name}-%{version}
 
