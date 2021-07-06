@@ -16,6 +16,9 @@ Source0:        https://www.idris-lang.org/idris2-src/%{name}-%{version}.tgz
 # simplified https://github.com/idris-lang/Idris2/pull/1123
 Patch0:         idris2-0.4-DESTDIR.patch
 
+BuildRequires:  gcc
+BuildRequires:  gmp-devel
+BuildRequires:  make
 %if %{with test}
 BuildRequires:  clang
 %endif
