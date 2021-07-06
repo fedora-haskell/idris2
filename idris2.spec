@@ -12,6 +12,8 @@ Summary:        Purely functional programming language with first class types
 License:        BSD
 URL:            https://www.idris-lang.org/
 Source0:        https://www.idris-lang.org/idris2-src/%{name}-%{version}.tgz
+# simplified https://github.com/idris-lang/Idris2/pull/1123
+Patch0:         idris2-0.4-DESTDIR.patch
 
 %if %{with test}
 BuildRequires:  clang
@@ -29,17 +31,20 @@ Idris is a programming language designed to encourage Type-Driven Development.
 
 %prep
 %setup -q -n Idris2-%{version}
+%patch0 -p1 -b .destdir
+
+grep /usr/bin/chezscheme9.5  bootstrap/idris2_app/idris2.ss && sed -i -e "s!/usr/bin/chezscheme9.5!/usr/bin/scheme!" bootstrap/idris2_app/idris2.ss
 
 
 %build
 %global idris_prefix %{_libdir}/%{name}
 
-make %{?with_racket:bootstrap-racket}%{!?with_racket:bootstrap SCHEME=scheme} PREFIX=%{buildroot}%{idris_prefix}
+make %{?with_racket:bootstrap-racket}%{!?with_racket:bootstrap SCHEME=scheme} PREFIX=%{idris_prefix}
 
 
 %install
 export PATH=%{buildroot}%{idris_prefix}/bin:$PATH
-make install PREFIX=%{buildroot}%{idris_prefix}
+make install DESTDIR=%{buildroot} PREFIX=%{idris_prefix}
 
 %if %{without racket}
 sed -i -e "s!$PWD/build/exec!%{idris_prefix}/bin!" %{buildroot}%{idris_prefix}/bin/idris2_app/compileChez
@@ -69,5 +74,8 @@ make test
 
 
 %changelog
+* Tue Jul  6 2021 Jens Petersen <petersen@redhat.com> - 0.4.0-1
+- add DESTDIR patch
+
 * Tue Jun 23 2020 Jens Petersen <petersen@redhat.com>
 - initial packaging
