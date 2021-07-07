@@ -1,7 +1,7 @@
 %global debug_package %{nil}
 
-# not working: non-bootstrap build can't rebuild idris2
-%bcond_without bootstrap
+# always bootstrap: otherwise rebuild fails
+%bcond_without boot
 
 %bcond_with test
 
@@ -22,7 +22,7 @@ Patch0:         idris2-0.4-DESTDIR.patch
 BuildRequires:  gcc
 BuildRequires:  gmp-devel
 BuildRequires:  make
-%if %{without bootstrap}
+%if %{without boot}
 BuildRequires:  idris2
 %endif
 %if %{with test}
@@ -49,7 +49,7 @@ grep /usr/bin/chezscheme9.5  bootstrap/idris2_app/idris2.ss && sed -i -e "s!/usr
 %build
 %global idris_prefix %{_libdir}/%{name}
 
-%if %{with bootstrap}
+%if %{with boot}
 make %{?with_racket:bootstrap-racket}%{!?with_racket:bootstrap SCHEME=scheme} PREFIX=%{idris_prefix}
 %else
 make
@@ -61,7 +61,7 @@ export PATH=%{buildroot}%{idris_prefix}/bin:$PATH
 # FIXME: warning: Duplicate build-ids:
 # /usr/lib64/idris2/bin/idris2_app/libidris2_support.so
 # /usr/lib64/idris2/lib/libidris2_support.so
-make install DESTDIR=%{buildroot} PREFIX=%{idris_prefix}
+make install-idris2 install-support DESTDIR=%{buildroot} PREFIX=%{idris_prefix}
 make install-with-src-libs DESTDIR=%{buildroot} PREFIX=%{idris_prefix}
 make install-api PREFIX=%{idris_prefix} IDRIS2_PACKAGE_PATH=%{buildroot}%{idris_prefix}/%{name}-%{version} IDRIS2_PREFIX=%{buildroot}%{idris_prefix}
 
@@ -72,11 +72,11 @@ chmod a-x %{buildroot}%{idris_prefix}/bin/idris2_app/compileChez
 
 chmod -R a=,+rwX %{buildroot}%{idris_prefix}/%{name}-%{version}
 
+mkdir -p %{buildroot}%{_datadir}/bash-completion/completions/
+%{buildroot}%{idris_prefix}/bin/idris2 --bash-completion-script %{name} > %{buildroot}%{_datadir}/bash-completion/completions/%{name}
+
 mkdir -p %{buildroot}%{_bindir}
 ln -s %{idris_prefix}/bin/idris2 %{buildroot}%{_bindir}
-
-mkdir -p %{buildroot}%{_datadir}/bash-completion/completions/
-%{buildroot}%{_bindir}/%{name} --bash-completion-script %{name} > %{buildroot}%{_datadir}/bash-completion/completions/%{name}
 
 
 %if %{with test}
