@@ -10,7 +10,7 @@
 
 Name:           idris2
 Version:        0.4.0
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Purely functional programming language with first class types
 
 License:        BSD
@@ -65,10 +65,12 @@ make install-idris2 install-support DESTDIR=%{buildroot} PREFIX=%{idris_prefix}
 make install-with-src-libs DESTDIR=%{buildroot} PREFIX=%{idris_prefix}
 make install-api PREFIX=%{idris_prefix} IDRIS2_PACKAGE_PATH=%{buildroot}%{idris_prefix}/%{name}-%{version} IDRIS2_PREFIX=%{buildroot}%{idris_prefix}
 
-%if %{without racket}
-chmod a-x %{buildroot}%{idris_prefix}/bin/idris2_app/compileChez
-%endif
 #sed -i -e "s!%{buildroot}!!" %{buildroot}%{idris_prefix}/bin/idris2_app/%{!?with_racket:idris2.ss}%{?with_racket:idris2.rkt}
+%if %{without racket}
+rm %{buildroot}%{idris_prefix}/bin/idris2_app/compileChez
+%endif
+# WARNING: ./usr/lib64/idris2/bin/idris2_app/idris2.rkt is executable but has no shebang, removing executable bit
+rm %{buildroot}%{idris_prefix}/bin/idris2_app/{idris2*.ss,idris2.rkt}
 
 chmod -R a=,+rwX %{buildroot}%{idris_prefix}/%{name}-%{version}
 
