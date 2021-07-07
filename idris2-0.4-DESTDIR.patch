@@ -1,7 +1,7 @@
 diff -up Idris2-0.4.0/Makefile.destdir Idris2-0.4.0/Makefile
 --- Idris2-0.4.0/Makefile.destdir	2021-06-24 03:09:33.000000000 +0800
-+++ Idris2-0.4.0/Makefile	2021-07-06 18:42:56.961947648 +0800
-@@ -153,35 +153,35 @@ install-with-src-api: src/IdrisPaths.idr
++++ Idris2-0.4.0/Makefile	2021-07-07 10:59:43.997141342 +0800
+@@ -153,42 +153,42 @@ install-with-src-api: src/IdrisPaths.idr
  	${IDRIS2_BOOT} --install-with-src ${IDRIS2_LIB_IPKG}
  
  install-idris2:
@@ -56,10 +56,22 @@ diff -up Idris2-0.4.0/Makefile.destdir Idris2-0.4.0/Makefile
 +	${MAKE} -C libs/test  install IDRIS2?=${TARGET} IDRIS2_PATH=${IDRIS2_BOOT_PATH} IDRIS2_PREFIX=${DESTDIR}${PREFIX}
  
  install-with-src-libs:
- 	${MAKE} -C libs/prelude install-with-src IDRIS2?=${TARGET} IDRIS2_PATH=${IDRIS2_BOOT_PATH}
+-	${MAKE} -C libs/prelude install-with-src IDRIS2?=${TARGET} IDRIS2_PATH=${IDRIS2_BOOT_PATH}
+-	${MAKE} -C libs/base install-with-src IDRIS2?=${TARGET} IDRIS2_PATH=${IDRIS2_BOOT_PATH}
+-	${MAKE} -C libs/contrib install-with-src IDRIS2?=${TARGET} IDRIS2_PATH=${IDRIS2_BOOT_PATH}
+-	${MAKE} -C libs/network install-with-src IDRIS2?=${TARGET} IDRIS2_PATH=${IDRIS2_BOOT_PATH}
+-	${MAKE} -C libs/test install-with-src IDRIS2?=${TARGET} IDRIS2_PATH=${IDRIS2_BOOT_PATH}
++	${MAKE} -C libs/prelude install-with-src IDRIS2?=${TARGET} IDRIS2_PATH=${IDRIS2_BOOT_PATH} IDRIS2_PREFIX=${DESTDIR}${PREFIX}
++	${MAKE} -C libs/base install-with-src IDRIS2?=${TARGET} IDRIS2_PATH=${IDRIS2_BOOT_PATH} IDRIS2_PREFIX=${DESTDIR}${PREFIX}
++	${MAKE} -C libs/contrib install-with-src IDRIS2?=${TARGET} IDRIS2_PATH=${IDRIS2_BOOT_PATH} IDRIS2_PREFIX=${DESTDIR}${PREFIX}
++	${MAKE} -C libs/network install-with-src IDRIS2?=${TARGET} IDRIS2_PATH=${IDRIS2_BOOT_PATH} IDRIS2_PREFIX=${DESTDIR}${PREFIX}
++	${MAKE} -C libs/test install-with-src IDRIS2?=${TARGET} IDRIS2_PATH=${IDRIS2_BOOT_PATH} IDRIS2_PREFIX=${DESTDIR}${PREFIX}
+ 
+ .PHONY: bootstrap bootstrap-build bootstrap-racket bootstrap-racket-build bootstrap-test bootstrap-clean
+ 
 diff -up Idris2-0.4.0/support/c/Makefile.destdir Idris2-0.4.0/support/c/Makefile
 --- Idris2-0.4.0/support/c/Makefile.destdir	2021-06-24 03:09:34.000000000 +0800
-+++ Idris2-0.4.0/support/c/Makefile	2021-07-06 13:00:11.804301987 +0800
++++ Idris2-0.4.0/support/c/Makefile	2021-07-07 01:49:51.406867300 +0800
 @@ -51,8 +51,8 @@ cleandep: clean
  .PHONY: install
  
@@ -76,7 +88,7 @@ diff -up Idris2-0.4.0/support/c/Makefile.destdir Idris2-0.4.0/support/c/Makefile
 +	install -m 644 *.h            ${DESTDIR}${PREFIX}/idris2-${IDRIS2_VERSION}/include
 diff -up Idris2-0.4.0/support/chez/Makefile.destdir Idris2-0.4.0/support/chez/Makefile
 --- Idris2-0.4.0/support/chez/Makefile.destdir	2021-06-24 03:09:34.000000000 +0800
-+++ Idris2-0.4.0/support/chez/Makefile	2021-07-06 13:00:11.804301987 +0800
++++ Idris2-0.4.0/support/chez/Makefile	2021-07-07 01:49:51.406867300 +0800
 @@ -10,8 +10,8 @@ clean:
  build: support-sep.ss
  
@@ -90,7 +102,7 @@ diff -up Idris2-0.4.0/support/chez/Makefile.destdir Idris2-0.4.0/support/chez/Ma
  	# start library header
 diff -up Idris2-0.4.0/support/refc/Makefile.destdir Idris2-0.4.0/support/refc/Makefile
 --- Idris2-0.4.0/support/refc/Makefile.destdir	2021-06-24 03:09:34.000000000 +0800
-+++ Idris2-0.4.0/support/refc/Makefile	2021-07-06 13:00:11.804301987 +0800
++++ Idris2-0.4.0/support/refc/Makefile	2021-07-07 01:49:51.407867310 +0800
 @@ -45,5 +45,5 @@ cleandep: clean
  .PHONY: install
  

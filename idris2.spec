@@ -1,5 +1,8 @@
 %global debug_package %{nil}
 
+# not working: non-bootstrap build can't rebuild idris2
+%bcond_without bootstrap
+
 %bcond_with test
 
 # causes /usr/lib/.build-id file conflict with racket-minimal
@@ -7,7 +10,7 @@
 
 Name:           idris2
 Version:        0.4.0
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Purely functional programming language with first class types
 
 License:        BSD
@@ -19,6 +22,9 @@ Patch0:         idris2-0.4-DESTDIR.patch
 BuildRequires:  gcc
 BuildRequires:  gmp-devel
 BuildRequires:  make
+%if %{without bootstrap}
+BuildRequires:  idris2
+%endif
 %if %{with test}
 BuildRequires:  clang
 %endif
@@ -43,12 +49,21 @@ grep /usr/bin/chezscheme9.5  bootstrap/idris2_app/idris2.ss && sed -i -e "s!/usr
 %build
 %global idris_prefix %{_libdir}/%{name}
 
+%if %{with bootstrap}
 make %{?with_racket:bootstrap-racket}%{!?with_racket:bootstrap SCHEME=scheme} PREFIX=%{idris_prefix}
+%else
+make
+%endif
 
 
 %install
 export PATH=%{buildroot}%{idris_prefix}/bin:$PATH
+# FIXME: warning: Duplicate build-ids:
+# /usr/lib64/idris2/bin/idris2_app/libidris2_support.so
+# /usr/lib64/idris2/lib/libidris2_support.so
 make install DESTDIR=%{buildroot} PREFIX=%{idris_prefix}
+make install-with-src-libs DESTDIR=%{buildroot} PREFIX=%{idris_prefix}
+make install-api PREFIX=%{idris_prefix} IDRIS2_PACKAGE_PATH=%{buildroot}%{idris_prefix}/%{name}-%{version} IDRIS2_PREFIX=%{buildroot}%{idris_prefix}
 
 %if %{without racket}
 chmod a-x %{buildroot}%{idris_prefix}/bin/idris2_app/compileChez
@@ -59,6 +74,9 @@ chmod -R a=,+rwX %{buildroot}%{idris_prefix}/%{name}-%{version}
 
 mkdir -p %{buildroot}%{_bindir}
 ln -s %{idris_prefix}/bin/idris2 %{buildroot}%{_bindir}
+
+mkdir -p %{buildroot}%{_datadir}/bash-completion/completions/
+%{buildroot}%{_bindir}/%{name} --bash-completion-script %{name} > %{buildroot}%{_datadir}/bash-completion/completions/%{name}
 
 
 %if %{with test}
@@ -72,11 +90,16 @@ make test
 %doc docs
 %{_bindir}/idris2
 %{_libdir}/idris2
+%{_datadir}/bash-completion/completions/%{name}
 
 
 %changelog
+* Wed Jul  7 2021 Jens Petersen <petersen@redhat.com> - 0.4.0-2
+- install-with-src-libs and install-api
+- add bash-completion
+
 * Tue Jul  6 2021 Jens Petersen <petersen@redhat.com> - 0.4.0-1
 - add DESTDIR patch
 
 * Tue Jun 23 2020 Jens Petersen <petersen@redhat.com>
-- initial packaging
+- initial packaging try
