@@ -75,7 +75,7 @@ rm %{buildroot}%{idris_prefix}/bin/idris2_app/{idris2*.ss,idris2.rkt}
 chmod -R a=,+rwX %{buildroot}%{idris_prefix}/%{name}-%{version}
 
 mkdir -p %{buildroot}%{_datadir}/bash-completion/completions/
-%{buildroot}%{idris_prefix}/bin/idris2 --bash-completion-script %{name} > %{buildroot}%{_datadir}/bash-completion/completions/%{name}
+%{buildroot}%{idris_prefix}/bin/idris2 --bash-completion-script %{name} | sed "s/dirnames/default/" > %{buildroot}%{_datadir}/bash-completion/completions/%{name}
 
 mkdir -p %{buildroot}%{_bindir}
 ln -s %{idris_prefix}/bin/idris2 %{buildroot}%{_bindir}
