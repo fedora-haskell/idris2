@@ -96,6 +96,10 @@ make test
 
 
 %changelog
+* Thu Jul  8 2021 Jens Petersen <petersen@redhat.com> - 0.4.0-3
+- remove bootstrapping files from bin/idris2_app/
+- change bash-completion from dirnames to default
+
 * Wed Jul  7 2021 Jens Petersen <petersen@redhat.com> - 0.4.0-2
 - install-with-src-libs and install-api
 - add bash-completion
