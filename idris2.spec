@@ -72,6 +72,8 @@ make install-api PREFIX=%{idris_prefix} IDRIS2_PACKAGE_PATH=%{buildroot}%{idris_
 #sed -i -e "s!%{buildroot}!!" %{buildroot}%{idris_prefix}/bin/idris2_app/%{!?with_racket:idris2.ss}%{?with_racket:idris2.rkt}
 %if %{without racket}
 rm %{buildroot}%{idris_prefix}/bin/idris2_app/compileChez
+%else
+rm %{buildroot}%{idris_prefix}/bin/idris2_app/idris2-boot
 %endif
 # WARNING: ./usr/lib64/idris2/bin/idris2_app/idris2.rkt is executable but has no shebang, removing executable bit
 rm %{buildroot}%{idris_prefix}/bin/idris2_app/{idris2*.ss,idris2.rkt}
