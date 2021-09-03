@@ -5,8 +5,12 @@
 
 %bcond_with test
 
-# causes /usr/lib/.build-id file conflict with racket-minimal
 %bcond_with racket
+
+%if %{with racket}
+# /usr/lib/.build-id file for bin/idris2 conflicts with racket-minimal starter
+%define _build_id_links alldebug
+%endif
 
 Name:           idris2
 Version:        0.4.0
