@@ -5,7 +5,7 @@
 
 %bcond_with test
 
-%bcond_with racket
+%bcond_without racket
 
 %if %{with racket}
 # /usr/lib/.build-id file for bin/idris2 conflicts with racket-minimal starter
@@ -111,6 +111,7 @@ make test
 
 %changelog
 * Sat Sep  4 2021 Jens Petersen <petersen@redhat.com> - 0.4.0-3
+- use the racket backend for codegen
 - move main idris binary to bindir and libidris2_support.so to libdir
   and IDRIS2_PREFIX is now libdir (this all mimics the AUR packaging)
 - drop rest of bindir files and libidris2_support.so copies
