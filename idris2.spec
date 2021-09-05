@@ -40,9 +40,18 @@ Requires:       racket
 BuildRequires:  chez-scheme
 Requires:       chez-scheme
 %endif
+Requires:       idris2-lib%{?_isa} = %{version}-%{release}
 
 %description
 Idris is a programming language designed to encourage Type-Driven Development.
+
+
+%package lib
+Summary:        idris2 runtime support library
+
+%description lib
+The package provide the runtime support library for idris2.
+
 
 %prep
 %setup -q -n Idris2-%{version}
@@ -104,9 +113,12 @@ make test
 %license LICENSE
 %doc docs
 %{_bindir}/idris2
-%{_libdir}/libidris2_support.so
 %{_libdir}/%{name}-%{version}
 %{_datadir}/bash-completion/completions/%{name}
+
+
+%files lib
+%{_libdir}/libidris2_support.so
 
 
 %changelog
