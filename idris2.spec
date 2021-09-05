@@ -20,7 +20,7 @@ Summary:        Purely functional programming language with first class types
 License:        BSD
 URL:            https://www.idris-lang.org/
 Source0:        https://www.idris-lang.org/idris2-src/%{name}-%{version}.tgz
-Source1:        idris2.sh
+#Source1:        idris2.sh
 # simplified https://github.com/idris-lang/Idris2/pull/1123
 Patch0:         idris2-0.4-DESTDIR.patch
 
