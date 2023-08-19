@@ -1,0 +1,119 @@
+diff -up Idris2-0.6.0/Makefile~ Idris2-0.6.0/Makefile
+--- Idris2-0.6.0/Makefile~	2022-10-27 23:43:33.000000000 +0800
++++ Idris2-0.6.0/Makefile	2023-08-19 18:15:59.638128127 +0800
+@@ -192,25 +192,25 @@ install-with-src-api: src/IdrisPaths.idr
+ 	${IDRIS2_BOOT} --install-with-src ${IDRIS2_LIB_IPKG}
+ 
+ install-idris2:
+-	mkdir -p ${PREFIX}/bin/
+-	install ${TARGET} ${PREFIX}/bin
++	mkdir -p ${DESTDIR}${PREFIX}/bin/
++	install ${TARGET} ${DESTDIR}${PREFIX}/bin
+ ifeq ($(OS), windows)
+-	-install ${TARGET}.cmd ${PREFIX}/bin
++	-install ${TARGET}.cmd ${DESTDIR}${PREFIX}/bin
+ endif
+-	mkdir -p ${PREFIX}/lib/
+-	install support/c/${IDRIS2_SUPPORT} ${PREFIX}/lib
+-	mkdir -p ${PREFIX}/bin/${NAME}_app
+-	install ${TARGETDIR}/${NAME}_app/* ${PREFIX}/bin/${NAME}_app
++	mkdir -p ${DESTDIR}${PREFIX}/lib/
++	install support/c/${IDRIS2_SUPPORT} ${DESTDIR}${PREFIX}/lib
++	mkdir -p ${DESTDIR}${PREFIX}/bin/${NAME}_app
++	install ${TARGETDIR}/${NAME}_app/* ${DESTDIR}${PREFIX}/bin/${NAME}_app
+ 
+ install-support:
+-	mkdir -p ${PREFIX}/${NAME_VERSION}/support/docs
+-	mkdir -p ${PREFIX}/${NAME_VERSION}/support/racket
+-	mkdir -p ${PREFIX}/${NAME_VERSION}/support/gambit
+-	mkdir -p ${PREFIX}/${NAME_VERSION}/support/js
+-	install -m 644 support/docs/*.css ${PREFIX}/${NAME_VERSION}/support/docs
+-	install -m 644 support/racket/* ${PREFIX}/${NAME_VERSION}/support/racket
+-	install -m 644 support/gambit/* ${PREFIX}/${NAME_VERSION}/support/gambit
+-	install -m 644 support/js/* ${PREFIX}/${NAME_VERSION}/support/js
++	mkdir -p ${DESTDIR}${PREFIX}/${NAME_VERSION}/support/docs
++	mkdir -p ${DESTDIR}${PREFIX}/${NAME_VERSION}/support/racket
++	mkdir -p ${DESTDIR}${PREFIX}/${NAME_VERSION}/support/gambit
++	mkdir -p ${DESTDIR}${PREFIX}/${NAME_VERSION}/support/js
++	install -m 644 support/docs/*.css ${DESTDIR}${PREFIX}/${NAME_VERSION}/support/docs
++	install -m 644 support/racket/* ${DESTDIR}${PREFIX}/${NAME_VERSION}/support/racket
++	install -m 644 support/gambit/* ${DESTDIR}${PREFIX}/${NAME_VERSION}/support/gambit
++	install -m 644 support/js/* ${DESTDIR}${PREFIX}/${NAME_VERSION}/support/js
+ 	@${MAKE} -C support/c install
+ 	@${MAKE} -C support/refc install
+ 	@${MAKE} -C support/chez install
+@@ -234,19 +234,19 @@ install-with-src-libs:
+ 	${MAKE} -C libs/linear install-with-src    IDRIS2=${TARGET} IDRIS2_PATH=${IDRIS2_BOOT_PATH} IDRIS2_INC_CGS=${IDRIS2_CG}
+ 
+ install-libdocs: libdocs
+-	mkdir -p ${PREFIX}/${NAME_VERSION}/docs/prelude
+-	mkdir -p ${PREFIX}/${NAME_VERSION}/docs/base
+-	mkdir -p ${PREFIX}/${NAME_VERSION}/docs/contrib
+-	mkdir -p ${PREFIX}/${NAME_VERSION}/docs/network
+-	mkdir -p ${PREFIX}/${NAME_VERSION}/docs/test
+-	mkdir -p ${PREFIX}/${NAME_VERSION}/docs/linear
+-	cp -r libs/prelude/build/docs/* ${PREFIX}/${NAME_VERSION}/docs/prelude
+-	cp -r libs/base/build/docs/* ${PREFIX}/${NAME_VERSION}/docs/base
+-	cp -r libs/contrib/build/docs/* ${PREFIX}/${NAME_VERSION}/docs/contrib
+-	cp -r libs/network/build/docs/* ${PREFIX}/${NAME_VERSION}/docs/network
+-	cp -r libs/test/build/docs/* ${PREFIX}/${NAME_VERSION}/docs/test
+-	cp -r libs/test/build/docs/* ${PREFIX}/${NAME_VERSION}/docs/linear
+-	install -m 644 support/docs/* ${PREFIX}/${NAME_VERSION}/docs
++	mkdir -p ${DESTDIR}${PREFIX}/${NAME_VERSION}/docs/prelude
++	mkdir -p ${DESTDIR}${PREFIX}/${NAME_VERSION}/docs/base
++	mkdir -p ${DESTDIR}${PREFIX}/${NAME_VERSION}/docs/contrib
++	mkdir -p ${DESTDIR}${PREFIX}/${NAME_VERSION}/docs/network
++	mkdir -p ${DESTDIR}${PREFIX}/${NAME_VERSION}/docs/test
++	mkdir -p ${DESTDIR}${PREFIX}/${NAME_VERSION}/docs/linear
++	cp -r libs/prelude/build/docs/* ${DESTDIR}${PREFIX}/${NAME_VERSION}/docs/prelude
++	cp -r libs/base/build/docs/* ${DESTDIR}${PREFIX}/${NAME_VERSION}/docs/base
++	cp -r libs/contrib/build/docs/* ${DESTDIR}${PREFIX}/${NAME_VERSION}/docs/contrib
++	cp -r libs/network/build/docs/* ${DESTDIR}${PREFIX}/${NAME_VERSION}/docs/network
++	cp -r libs/test/build/docs/* ${DESTDIR}${PREFIX}/${NAME_VERSION}/docs/test
++	cp -r libs/test/build/docs/* ${DESTDIR}${PREFIX}/${NAME_VERSION}/docs/linear
++	install -m 644 support/docs/* ${DESTDIR}${PREFIX}/${NAME_VERSION}/docs
+ 
+ 
+ .PHONY: bootstrap bootstrap-build bootstrap-racket bootstrap-racket-build bootstrap-test bootstrap-clean
+diff -up Idris2-0.6.0/support/c/Makefile~ Idris2-0.6.0/support/c/Makefile
+--- Idris2-0.6.0/support/c/Makefile~	2022-10-27 23:43:33.000000000 +0800
++++ Idris2-0.6.0/support/c/Makefile	2023-08-19 18:17:31.770590936 +0800
+@@ -53,8 +53,8 @@ cleandep: clean
+ .PHONY: install
+ 
+ install: build
+-	mkdir -p ${PREFIX}/idris2-${IDRIS2_VERSION}/lib
+-	mkdir -p ${PREFIX}/idris2-${IDRIS2_VERSION}/support/c
+-	install -m 755 $(DYLIBTARGET) ${PREFIX}/idris2-${IDRIS2_VERSION}/lib
+-	install -m 644 $(LIBTARGET)   ${PREFIX}/idris2-${IDRIS2_VERSION}/lib
+-	install -m 644 *.h            ${PREFIX}/idris2-${IDRIS2_VERSION}/support/c
++	mkdir -p ${DESTDIR}${PREFIX}/idris2-${IDRIS2_VERSION}/lib
++	mkdir -p ${DESTDIR}${PREFIX}/idris2-${IDRIS2_VERSION}/support/c
++	install -m 755 $(DYLIBTARGET) ${DESTDIR}${PREFIX}/idris2-${IDRIS2_VERSION}/lib
++	install -m 644 $(LIBTARGET)   ${DESTDIR}${PREFIX}/idris2-${IDRIS2_VERSION}/lib
++	install -m 644 *.h            ${DESTDIR}${PREFIX}/idris2-${IDRIS2_VERSION}/support/c
+diff -up Idris2-0.6.0/support/chez/Makefile~ Idris2-0.6.0/support/chez/Makefile
+--- Idris2-0.6.0/support/chez/Makefile~	2022-10-27 23:43:33.000000000 +0800
++++ Idris2-0.6.0/support/chez/Makefile	2023-08-19 18:17:13.386526202 +0800
+@@ -10,8 +10,8 @@ clean:
+ build: support-sep.ss
+ 
+ install: build
+-	mkdir -p ${PREFIX}/idris2-${IDRIS2_VERSION}/support/chez
+-	install -m 644 *.ss ${PREFIX}/idris2-${IDRIS2_VERSION}/support/chez
++	mkdir -p ${DESTDIR}${PREFIX}/idris2-${IDRIS2_VERSION}/support/chez
++	install -m 644 *.ss ${DESTDIR}${PREFIX}/idris2-${IDRIS2_VERSION}/support/chez
+ 
+ support-sep.ss: support.ss
+ 	# start library header
+diff -up Idris2-0.6.0/support/refc/Makefile~ Idris2-0.6.0/support/refc/Makefile
+--- Idris2-0.6.0/support/refc/Makefile~	2022-10-27 23:43:33.000000000 +0800
++++ Idris2-0.6.0/support/refc/Makefile	2023-08-19 18:17:02.956489476 +0800
+@@ -43,5 +43,5 @@ cleandep: clean
+ .PHONY: install
+ 
+ install: build
+-	mkdir -p ${PREFIX}/idris2-${IDRIS2_VERSION}/support/refc
+-	install -m 644 $(LIBTARGET) *.h ${PREFIX}/idris2-${IDRIS2_VERSION}/support/refc
++	mkdir -p ${DESTDIR}${PREFIX}/idris2-${IDRIS2_VERSION}/support/refc
++	install -m 644 $(LIBTARGET) *.h ${DESTDIR}${PREFIX}/idris2-${IDRIS2_VERSION}/support/refc

@@ -1,0 +1,15 @@
+--- Idris2-0.6.0/src/Idris/Package.idr~	2023-08-19 23:04:29.997063588 +0800
++++ Idris2-0.6.0/src/Idris/Package.idr	2023-08-19 23:18:21.098024386 +0800
+@@ -583,7 +583,9 @@
+                                (mainmod pkg)
+          wdir <- getWorkingDir
+          -- Make the package installation directory
+-         let targetDir = prefix_dir (dirs (options defs)) </>
++         mdestdir <- coreLift $ getEnv "DESTDIR"
++         let destdir = fromMaybe "" mdestdir
++         let targetDir = destdir ++ prefix_dir (dirs (options defs)) </>
+                              "idris2-" ++ showVersion False version </>
+                              installDir pkg
+          Right _ <- coreLift $ mkdirAll targetDir
+
+Diff finished.  Sat Aug 19 23:18:32 2023
