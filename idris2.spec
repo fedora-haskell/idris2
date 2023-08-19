@@ -1,8 +1,10 @@
+# causes strip errors: cannot set time for file
 %global debug_package %{nil}
 
 # always bootstrap: otherwise rebuild fails
 %bcond_without boot
 
+# requires network?
 %bcond_with test
 
 %bcond_without racket
@@ -13,8 +15,8 @@
 %endif
 
 Name:           idris2
-Version:        0.4.0
-Release:        3%{?dist}
+Version:        0.5.1
+Release:        1%{?dist}
 Summary:        Purely functional programming language with first class types
 
 License:        BSD
@@ -122,6 +124,9 @@ make test
 
 
 %changelog
+* Mon Sep 20 2021 Jens Petersen <petersen@redhat.com> - 0.5.1-1
+- update to 0.5.1
+
 * Sat Sep  4 2021 Jens Petersen <petersen@redhat.com> - 0.4.0-3
 - use the racket backend for codegen
 - move main idris binary to bindir and libidris2_support.so to libdir
