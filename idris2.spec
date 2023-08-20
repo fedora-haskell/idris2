@@ -49,7 +49,7 @@ Requires:       racket
 BuildRequires:  chez-scheme
 Requires:       chez-scheme
 %endif
-Requires:       idris2-lib%{?_isa} = %{version}-%{release}
+Requires:       %{name}-lib%{?_isa} = %{version}-%{release}
 
 %description
 Idris is a programming language designed to encourage Type-Driven Development.
@@ -107,8 +107,9 @@ make install DESTDIR=%{buildroot} PREFIX=%{idris_prefix}
 # mkdir -p %{buildroot}%{_bindir}
 # mv %{buildroot}%{idris_prefix}/bin/idris2_app/idris2 %{buildroot}%{_bindir}/
 # rm -r %{buildroot}%{idris_prefix}/bin
-# mv %{buildroot}%{idris_prefix}/lib/libidris2_support.so %{buildroot}%{_libdir}
-# rm %{buildroot}%{idris_prefix}/%{name}-%{version}/lib/libidris2_support.so
+mv %{buildroot}%{idris_prefix}/lib/libidris2_support.so %{buildroot}%{_libdir}
+rm %{buildroot}%{idris_prefix}/%{name}-%{version}/lib/libidris2_support.so
+rm %{buildroot}%{idris_prefix}/bin/idris2_app/libidris2_support.so
 
 # #sed -i -e "s!%{buildroot}!!" %{buildroot}%{idris_prefix}/bin/idris2_app/%{!?with_racket:idris2.ss}%{?with_racket:idris2.rkt}
 # # %if %{without racket}
@@ -124,8 +125,8 @@ ln -s ../%{_lib}/%{name}/bin/idris2 %{buildroot}%{_bindir}
 
 #chmod -R a=,+rwX %%{buildroot}%%{idris_prefix}/%%{name}-%%{version}
 
-#mkdir -p %{buildroot}%{_datadir}/bash-completion/completions/
-#LD_LIBRARY_PATH="%{buildroot}%{_libdir}:" %{buildroot}%{_bindir}/idris2 --bash-completion-script %{name} | sed "s/dirnames/default/" > %{buildroot}%{_datadir}/bash-completion/completions/%{name}
+mkdir -p %{buildroot}%{_datadir}/bash-completion/completions/
+LD_LIBRARY_PATH="%{buildroot}%{_libdir}:" %{buildroot}%{_bindir}/idris2 --bash-completion-script %{name} | sed "s/dirnames/default/" > %{buildroot}%{_datadir}/bash-completion/completions/%{name}
 
 #install %{SOURCE1} %{buildroot}%{_bindir}/idris2
 #sed -i -e 's!@IDRIS2_PREFIX@!%{idris_prefix}!' %{buildroot}%{_bindir}/idris2
@@ -139,11 +140,12 @@ make test
 
 %files
 %license LICENSE
-%doc docs
+%doc *.md
+%doc www/source/index.md
 %{_bindir}/idris2
 %{idris_prefix}
-%{_libdir}/%{name}-%{version}
-#%%{_datadir}/bash-completion/completions/%%{name}
+#%%{_libdir}/%%{name}-%%{version}
+%{_datadir}/bash-completion/completions/%{name}
 
 
 %if %{with docs}
@@ -153,8 +155,8 @@ make test
 %endif
 
 
-#%%files lib
-#%%{_libdir}/libidris2_support.so
+%files lib
+%{_libdir}/libidris2_support.so
 
 
 %changelog
