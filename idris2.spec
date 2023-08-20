@@ -16,7 +16,7 @@
 
 Name:           idris2
 Version:        0.6.0
-Release:        0.1%{?dist}
+Release:        0.2%{?dist}
 Summary:        Purely functional programming language with first class types
 
 License:        BSD
@@ -100,7 +100,10 @@ make install DESTDIR=%{buildroot} PREFIX=%{idris_prefix}
 # # WARNING: ./usr/lib64/idris2/bin/idris2_app/idris2.rkt is executable but has no shebang, removing executable bit
 # #rm %{buildroot}%{idris_prefix}/bin/idris2_app/{idris2*.ss,idris2.rkt}
 
-chmod -R a=,+rwX %{buildroot}%{idris_prefix}/%{name}-%{version}
+mkdir %{buildroot}%{_bindir}
+ln -s ../%{_lib}/%{name}/bin/idris2 %{buildroot}%{_bindir}
+
+#chmod -R a=,+rwX %%{buildroot}%%{idris_prefix}/%%{name}-%%{version}
 
 #mkdir -p %{buildroot}%{_datadir}/bash-completion/completions/
 #LD_LIBRARY_PATH="%{buildroot}%{_libdir}:" %{buildroot}%{_bindir}/idris2 --bash-completion-script %{name} | sed "s/dirnames/default/" > %{buildroot}%{_datadir}/bash-completion/completions/%{name}
@@ -118,7 +121,7 @@ make test
 %files
 %license LICENSE
 %doc docs
-#%%{_bindir}/idris2
+%{_bindir}/idris2
 %{idris_prefix}
 %{_libdir}/%{name}-%{version}
 #%%{_datadir}/bash-completion/completions/%%{name}
