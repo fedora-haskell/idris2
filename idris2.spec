@@ -4,6 +4,8 @@
 # always bootstrap: otherwise rebuild fails
 %bcond_without boot
 
+%bcond_without docs
+
 # requires network?
 %bcond_with test
 
@@ -33,6 +35,10 @@ BuildRequires:  make
 %if %{without boot}
 BuildRequires:  idris2
 %endif
+%if %{with docs}
+BuildRequires:  python3-sphinx
+BuildRequires:  python3-sphinx_rtd_theme
+%endif
 %if %{with test}
 BuildRequires:  clang
 %endif
@@ -47,6 +53,15 @@ Requires:       idris2-lib%{?_isa} = %{version}-%{release}
 
 %description
 Idris is a programming language designed to encourage Type-Driven Development.
+
+
+%if %{with docs}
+%package docs
+Summary:        Idris2 documentation
+
+%description docs
+The package contains the idris2 manual
+%endif
 
 
 %package lib
@@ -71,6 +86,10 @@ grep /usr/local/bin/scheme bootstrap/idris2_app/idris2.ss && sed -i -e "s!/usr/l
 make %{?with_racket:bootstrap-racket}%{!?with_racket:bootstrap SCHEME=scheme} PREFIX=%{idris_prefix}
 %else
 make
+%endif
+
+%if %{with docs}
+make -C docs html
 %endif
 
 
@@ -125,6 +144,13 @@ make test
 %{idris_prefix}
 %{_libdir}/%{name}-%{version}
 #%%{_datadir}/bash-completion/completions/%%{name}
+
+
+%if %{with docs}
+%files docs
+%doc docs/build/html
+%doc samples
+%endif
 
 
 #%%files lib
