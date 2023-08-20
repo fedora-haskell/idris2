@@ -58,6 +58,11 @@ Idris is a programming language designed to encourage Type-Driven Development.
 %if %{with docs}
 %package docs
 Summary:        Idris2 documentation
+%if 0%{?fedora} >= 39
+Requires:       fontawesome4-fonts
+%else
+Requires:       fontawesome-fonts
+%endif
 
 %description docs
 The package contains the idris2 manual
