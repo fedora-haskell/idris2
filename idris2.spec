@@ -17,16 +17,13 @@
 %endif
 
 Name:           idris2
-Version:        0.6.0
-Release:        0.3%{?dist}
+Version:        0.7.0
+Release:        1%{?dist}
 Summary:        Purely functional programming language with first class types
 
-License:        BSD
-URL:            https://www.idris-lang.org/
-Source0:        https://www.idris-lang.org/idris2-src/%{name}-%{version}.tgz
-# https://github.com/idris-lang/Idris2/pull/3053
-Patch0:         idris2-DESTDIR.patch
-Patch1:         idris-Package-destdir.patch
+License:        BSD-3-Clause
+URL:            https://www.idris-lang.org
+Source0:        https://github.com/idris-lang/Idris2/archive/refs/tags/v0.7.0.tar.gz#/%{name}-%{version}.tar.gz
 
 BuildRequires:  gcc
 BuildRequires:  gmp-devel
@@ -42,8 +39,9 @@ BuildRequires:  python3-sphinx_rtd_theme
 BuildRequires:  clang
 %endif
 %if %{with racket}
-BuildRequires:  racket
-Requires:       racket
+BuildRequires:  racket-minimal
+BuildRequires:  racket-pkgs
+Requires:       racket-minimal
 %else
 BuildRequires:  chez-scheme
 Requires:       chez-scheme
@@ -77,10 +75,6 @@ The package provide the runtime support library for idris2.
 
 %prep
 %setup -q -n Idris2-%{version}
-%patch -P0 -p1 -b .destdir
-%patch -P1 -p1 -b .destdir
-
-grep /usr/local/bin/scheme bootstrap/idris2_app/idris2.ss && sed -i -e "s!/usr/local/bin/scheme!/usr/bin/scheme!" bootstrap/idris2_app/idris2.ss
 
 
 %build
@@ -100,11 +94,14 @@ export PATH=%{buildroot}/bin:$PATH
 make install DESTDIR=%{buildroot} PREFIX=%{_libdir}
 
 mkdir %{buildroot}%{_bindir}
+%if %{without racket}
 mv %{buildroot}%{_libdir}/bin/idris2_app/idris2.so %{buildroot}%{_bindir}/idris2
+%else
+mv %{buildroot}%{_libdir}/bin/idris2_app/idris2 %{buildroot}%{_bindir}/
+%endif
 rm %{buildroot}%{_libdir}/bin/idris2_app/libidris2_support.so
 
-mv %{buildroot}%{_libdir}/lib/libidris2_support.so %{buildroot}%{_libdir}
-rm %{buildroot}%{_libdir}/%{name}-%{version}/lib/libidris2_support.so
+mv %{buildroot}%{_libdir}/%{name}-%{version}/lib/libidris2_support.so %{buildroot}%{_libdir}
 
 mkdir -p %{buildroot}%{_datadir}/bash-completion/completions/
 LD_LIBRARY_PATH="%{buildroot}%{_libdir}:" %{buildroot}%{_bindir}/idris2 --bash-completion-script %{name} | sed "s/dirnames/default/" > %{buildroot}%{_datadir}/bash-completion/completions/%{name}
