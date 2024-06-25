@@ -1,5 +1,6 @@
-# causes strip errors: cannot set time for file
-#%%global debug_package %%{nil}
+%if %{defined rhel}
+%global debug_package %{nil}
+%endif
 
 # always bootstrap: otherwise rebuild fails
 %bcond_without boot
@@ -43,8 +44,8 @@ BuildRequires:  racket-minimal
 BuildRequires:  racket-pkgs
 Requires:       racket-minimal
 %else
-BuildRequires:  chez-scheme
-Requires:       chez-scheme
+BuildRequires:  chez-scheme >= 10
+Requires:       chez-scheme >= 10
 %endif
 Requires:       %{name}-lib%{?_isa} = %{version}-%{release}
 
@@ -136,6 +137,10 @@ make test
 
 
 %changelog
+* Tue Jun 25 2024 Jens Petersen <petersen@redhat.com> - 0.7.0-1
+- update to 0.7.0
+- require chez-scheme-10
+
 * Sat Aug 19 2023 Jens Petersen <petersen@redhat.com> - 0.6.0-0.1
 - update to 0.6.0
   https://github.com/idris-lang/Idris2/blob/v0.6.0/CHANGELOG.md
